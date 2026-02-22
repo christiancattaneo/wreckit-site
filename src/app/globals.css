@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --bg: #0a0a0f;
+  --fg: #e6e6f0;
+  --muted: #9aa0b4;
+  --green: #00ff88;
+  --red: #ff3366;
+  --amber: #ffaa00;
+  --blue: #4da3ff;
+  --glass: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+::selection {
+  background: rgba(0, 255, 136, 0.25);
+}
+
+.text-glow {
+  text-shadow: 0 0 16px rgba(0, 255, 136, 0.35);
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
+}
+
+.blob {
+  position: absolute;
+  filter: blur(80px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+@keyframes floatSlow {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(40px, -30px, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-10px, 20px, 0) scale(0.95);
+  }
+}
+
+@keyframes floatSlowAlt {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-30px, 40px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(20px, -20px, 0) scale(0.98);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 18px rgba(0, 255, 136, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(0, 255, 136, 0.5);
+  }
+}
+
+@keyframes pulseVerdict {
+  0%,
+  100% {
+    box-shadow: 0 0 18px var(--glow, rgba(0, 255, 136, 0.35));
+  }
+  50% {
+    box-shadow: 0 0 36px var(--glow, rgba(0, 255, 136, 0.6));
+  }
+}
+
+@keyframes cursorBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes particleDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(20px, -30px, 0);
+  }
+  100% {
+    transform: translate3d(-15px, 15px, 0);
+  }
+}
