@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Syne } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,6 +14,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+const syne = Syne({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+});
+
 export const metadata: Metadata = {
   title: "wreckit — AI Code Verification",
   description:
@@ -26,8 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-[var(--bg)] text-[var(--fg)] antialiased font-sans">
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable} ${syne.variable}`}
+    >
+      <body className="bg-[var(--bg)] text-[var(--text)] antialiased font-sans">
         {children}
       </body>
     </html>
