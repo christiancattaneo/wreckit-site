@@ -21,9 +21,9 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "wreckit — AI Code Verification",
+  title: "Reckit Ralph — AI Code Verification",
   description:
-    "Build it. Break it. Prove it works. wreckit is an AI code verification agent that can't fake its own proof.",
+    "Reckit Ralph is a full verification system for software quality. Ralph Loop is one gate inside a broader evidence pipeline.",
 };
 
 export default function RootLayout({

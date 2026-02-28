@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const lines = [
-  "$ wreckit audit ./src",
+  "$ reckit-ralph audit ./src",
   "",
   "Detecting stack... TypeScript / Next.js / Vitest",
   "Spawning 11 verification workers...",
@@ -87,7 +87,7 @@ export default function Terminal() {
         <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
         <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
         <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-        <span className="ml-3 text-xs text-slate-500">wreckit run</span>
+        <span className="ml-3 text-xs text-slate-500">reckit ralph run</span>
       </div>
       <div
         ref={containerRef}
