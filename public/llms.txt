@@ -1,0 +1,38 @@
+# wreckit — Bulletproof AI Code Verification
+
+wreckit is a language-agnostic, framework-agnostic code verification platform. It orchestrates a swarm of parallel verification workers — slop scanner, type checker, mutation tester, SAST analyzer, and more — then corroborates results to produce a tamper-evident proof bundle with a Ship / Caution / Blocked verdict. No external CI infrastructure required.
+
+## Product
+
+- **Site**: https://wreckit-ralph.vercel.app
+- **OpenClaw Skill**: `clawhub install wreckit` (v2.3.1)
+- **GitHub**: https://github.com/christiancattaneo/wreckit
+- **Status**: Live — skill available, SaaS tier coming soon
+
+## Key Capabilities
+
+- **AI Slop Scan** — detects placeholder code, template artifacts, and empty stubs
+- **Type Checking** — tsc / mypy / cargo check / go vet based on auto-detected stack
+- **Mutation Testing** — mutmut / cargo-mutants / Stryker with AI fallback
+- **Test Quality Gate** — coverage, test structure, red-green discipline
+- **Cross-Verification** — independent agent corroborates builder's claims
+- **SAST / Red Team** — 20+ vulnerability patterns, ReDoS, secrets detection
+- **Dynamic Analysis** — memory leaks, race conditions, FD leaks
+- **Performance Benchmarks** — regression detection vs baseline
+- **Proof Bundle** — `.wreckit/proof.json` with Ship / Caution / Blocked verdict
+- **Four Modes** — BUILD, REBUILD, FIX, AUDIT
+
+## Pricing
+
+- **Free**: Open-source skill via ClawHub — self-hosted, unlimited use
+- **Pro** (coming soon): $9/mo — hosted verification, audit log, PR integration
+- **Team** (coming soon): $29/mo — team dashboards, shared proof bundles, SSO
+
+## Waitlist
+
+- `POST /api/subscribe` — Body: `{ email: string }`. Joins early access waitlist for hosted Pro/Team tiers.
+
+## Docs
+
+- [GitHub README](https://github.com/christiancattaneo/wreckit) — full usage guide, modes, gates, scripts reference
+- [ClawHub](https://clawhub.com/skills/wreckit) — skill listing and install instructions
