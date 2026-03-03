@@ -31,11 +31,37 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Reckit Ralph",
+    "description": "AI code verification system. 11 parallel gates — slop scan, type check, mutation testing, security, and more. Ships a signed proof bundle with every verdict.",
+    "url": "https://wreckit-ralph.vercel.app",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web, CLI",
+    "offers": [
+      { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+      { "@type": "Offer", "name": "Pro", "price": "29", "priceCurrency": "USD", "billingIncrement": "month" },
+      { "@type": "Offer", "name": "Team", "price": "99", "priceCurrency": "USD", "billingIncrement": "month" }
+    ],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Reckit Ralph",
+      "url": "https://wreckit-ralph.vercel.app"
+    }
+  };
+
   return (
     <html
       lang="en"
       className={`${inter.variable} ${jetbrainsMono.variable} ${syne.variable}`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="bg-[var(--bg)] text-[var(--text)] antialiased font-sans">
         {children}
       </body>
