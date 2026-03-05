@@ -500,6 +500,12 @@ export default function MarketingPage() {
                 {item.label}
               </a>
             ))}
+            <a
+              href="/blog"
+              className="relative text-slate-700 transition hover:text-slate-900 after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--grad-text)] after:transition-all hover:after:w-full"
+            >
+              Blog
+            </a>
           </div>
           <Button className="rounded-full bg-[var(--grad-primary)] text-white shadow-[0_12px_24px_rgba(99,102,241,0.3)] hover:opacity-90">
             Run Reckit Ralph
