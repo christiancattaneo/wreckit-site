@@ -9,6 +9,15 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: "mutation-testing-with-ai",
+    title: "Mutation Testing with AI: How to Actually Prove Your Code Works",
+    excerpt:
+      "Passing tests don't mean working code. Learn how mutation testing exposes weak test suites with a concrete example, and how wreckit automates it with kill-rate thresholds and a signed proof bundle.",
+    date: "2026-03-08",
+    readTime: "7 min read",
+    tags: ["mutation testing AI", "verification", "proof bundle"],
+  },
+  {
     slug: "what-is-ai-code-verification",
     title: "What Is AI Code Verification? (And Why Tests Alone Aren't Enough)",
     excerpt:
