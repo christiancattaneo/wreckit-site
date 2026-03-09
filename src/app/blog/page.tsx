@@ -9,6 +9,15 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: "proof-driven-development",
+    title: "Proof-Driven Development: Why AI Code Needs Evidence, Not Just Tests",
+    excerpt:
+      "Tests tell you if code works in expected cases. Proof tells you if code works in ALL cases. Introducing PDD: a methodology where every AI-generated feature ships with a proof bundle of evidence, not just a passing test suite.",
+    date: "2026-03-09",
+    readTime: "7 min read",
+    tags: ["proof-driven development", "AI verification", "proof bundle"],
+  },
+  {
     slug: "mutation-testing-with-ai",
     title: "Mutation Testing with AI: How to Actually Prove Your Code Works",
     excerpt:
