@@ -1,13 +1,11 @@
 "use client";
 
 import {
-  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
   type CSSProperties,
-  type FormEvent,
 } from "react";
 import { motion, useInView } from "framer-motion";
 import {
@@ -15,163 +13,120 @@ import {
   Bot,
   Check,
   CheckCircle2,
+  Code2,
   Cpu,
   FileCheck,
-  Gamepad2,
   Layers,
   Lock,
-  Loader2,
   Radar,
   Shield,
   Sparkles,
   TerminalSquare,
   UserRound,
   Wrench,
+  Zap,
+  Activity,
+  Bug,
+  GitBranch,
+  Search,
+  Eye,
+  Gauge,
+  Shuffle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Terminal from "@/components/Terminal";
 import { cn } from "@/lib/utils";
 
-const painPoints = [
-  {
-    icon: Radar,
-    title: "Polite reviews miss risky gaps",
-    copy: "Confident AI feedback can overlook fragile edge cases and security drift.",
-  },
-  {
-    icon: Layers,
-    title: "Loop-only checks are too narrow",
-    copy: "Ralph loops are useful, but they are only one gate in a trustworthy release process.",
-  },
-  {
-    icon: Shield,
-    title: "Shipping without evidence is expensive",
-    copy: "If there is no proof trail, each deploy becomes a wager.",
-  },
-];
+/* ────────────────────────────── DATA ────────────────────────────── */
 
 const steps = [
   {
-    title: "Point Reckit Ralph at code, branch, or prompt",
-    copy: "Run from local repo, CI job, or plain-language feature specification.",
+    title: "Say what you want",
+    copy: 'Natural language to your OpenClaw agent: "Use wreckit to audit this project"',
   },
   {
-    title: "Parallel specialists run 11 verification gates",
-    copy: "Ralph Loop is one gate. Security, testing, architecture, and replay gates run alongside it.",
+    title: "14 gates run",
+    copy: "Slop scan, type check, SAST, mutation testing, dynamic analysis, and more — in parallel.",
   },
   {
-    title: "Receive verdict plus signed evidence bundle",
-    copy: "Each decision ships with machine-verifiable artifacts your team can audit.",
+    title: "Get your verdict",
+    copy: "Ship ✅, Caution ⚠️, or Blocked 🚫 — plus a signed proof bundle in .wreckit/",
   },
 ];
 
 const gates = [
-  {
-    name: "AI Slop Scan",
-    desc: "Finds placeholders, generated residue, and suspicious dead paths.",
-    icon: Sparkles,
-  },
-  {
-    name: "Type Check",
-    desc: "Static analysis with zero unresolved errors.",
-    icon: CheckCircle2,
-  },
-  {
-    name: "Ralph Loop",
-    desc: "Adversarial builder-breaker loop pressure-tests logic.",
-    icon: Gamepad2,
-  },
-  {
-    name: "Test Quality",
-    desc: "Scores coverage depth, assertion density, and test structure.",
-    icon: Layers,
-  },
-  {
-    name: "Mutation Kill",
-    desc: "Mutates code paths and verifies tests catch regressions.",
-    icon: Wrench,
-  },
-  {
-    name: "Cross-Verify",
-    desc: "Independent oracle validates behavior consistency.",
-    icon: Cpu,
-  },
-  {
-    name: "SAST",
-    desc: "Static security analysis for critical and high findings.",
-    icon: Shield,
-  },
-  {
-    name: "Design Review",
-    desc: "Flags coupling, architecture drift, and cyclic dependencies.",
-    icon: FileCheck,
-  },
-  {
-    name: "CI Integration",
-    desc: "Validates real pipeline wiring and execution contracts.",
-    icon: TerminalSquare,
-  },
-  {
-    name: "Runtime Replay",
-    desc: "Replays key paths in deterministic environment snapshots.",
-    icon: Bot,
-  },
-  {
-    name: "Proof Bundle",
-    desc: "Packages signed verdict artifacts under .wreckit for audit.",
-    icon: Lock,
-  },
+  { name: "AI Slop Scan", desc: "Detects placeholder code, template artifacts, empty stubs.", icon: Sparkles },
+  { name: "Type Check", desc: "tsc / mypy / cargo check / go vet — zero unresolved errors.", icon: CheckCircle2 },
+  { name: "Ralph Loop", desc: "Adversarial builder-breaker loop pressure-tests logic.", icon: Bug },
+  { name: "Test Quality", desc: "Coverage depth, assertion density, and test structure scoring.", icon: Layers },
+  { name: "Mutation Kill", desc: "mutmut / Stryker / cargo-mutants — verifies tests catch regressions.", icon: Wrench },
+  { name: "Cross-Verify", desc: "Independent agent corroborates the builder's claims.", icon: Eye },
+  { name: "Behavior Capture", desc: "Golden fixtures captured before rebuild/fix.", icon: GitBranch },
+  { name: "Regression", desc: "Byte-for-byte replay with LLM-as-judge diff approval.", icon: Activity },
+  { name: "SAST / Red Team", desc: "20+ vulnerability patterns, ReDoS analysis.", icon: Shield },
+  { name: "Dynamic Analysis", desc: "Memory leaks, race conditions, FD leaks at runtime.", icon: Zap },
+  { name: "Design Review", desc: "Dep graph, circular deps, coupling, god modules.", icon: FileCheck },
+  { name: "CI Integration", desc: "CI config detection and pipeline scoring.", icon: TerminalSquare },
+  { name: "Performance", desc: "Benchmark detection + regression vs captured baseline.", icon: Gauge },
+  { name: "Proof Bundle", desc: "Writes .wreckit/proof.json, dashboard.json, decision.md.", icon: Lock },
 ];
 
 const modes = [
   {
     name: "BUILD",
     chip: "B",
-    color: "linear-gradient(90deg, #12b76a, #22c55e)",
-    trigger: "Greenfield systems",
-    desc: "Start with verification guardrails from day one.",
+    emoji: "🟢",
+    color: "linear-gradient(90deg, #10b981, #22c55e)",
+    trigger: "New project from PRD",
+    desc: "Full pipeline for greenfield projects with verification guardrails from day one.",
   },
   {
     name: "REBUILD",
     chip: "R",
+    emoji: "🟡",
     color: "linear-gradient(90deg, #f59e0b, #fbbf24)",
-    trigger: "Migrations and rewrites",
-    desc: "Refactor core surfaces without sacrificing release confidence.",
+    trigger: "Existing code + migration spec",
+    desc: "BUILD + behavior capture + regression replay for safe migrations.",
   },
   {
     name: "FIX",
     chip: "F",
-    color: "linear-gradient(90deg, #f43f5e, #e11d48)",
-    trigger: "Regression incidents",
-    desc: "Patch safely and verify collateral behavior did not regress.",
+    emoji: "🔴",
+    color: "linear-gradient(90deg, #ef4444, #f43f5e)",
+    trigger: "Bug fix with proof",
+    desc: "Fix, verify, prove nothing else broke. Signed evidence of safety.",
   },
   {
     name: "AUDIT",
     chip: "A",
+    emoji: "🔵",
     color: "linear-gradient(90deg, #06b6d4, #3b82f6)",
-    trigger: "Pre-release validation",
-    desc: "Prove readiness with reproducible evidence and threshold checks.",
+    trigger: "Verify existing code, no changes",
+    desc: "Read-only analysis. Full gate suite. No modifications to your codebase.",
   },
 ];
 
 const verdicts = [
   {
     name: "SHIP",
-    color: "#065f46",
-    glow: "rgba(16, 185, 129, 0.45)",
-    desc: "All gates passed and evidence thresholds were satisfied.",
+    symbol: "✅",
+    color: "#064e3b",
+    glow: "rgba(16, 185, 129, 0.35)",
+    desc: "All gates passed. Evidence thresholds satisfied. Safe to deploy.",
   },
   {
     name: "CAUTION",
-    color: "#92400e",
-    glow: "rgba(245, 158, 11, 0.4)",
-    desc: "Some gates flagged risk. Review before promoting.",
+    symbol: "⚠️",
+    color: "#78350f",
+    glow: "rgba(245, 158, 11, 0.3)",
+    desc: "Some gates flagged risk. Review the proof bundle before promoting.",
   },
   {
     name: "BLOCKED",
-    color: "#9f1239",
-    glow: "rgba(244, 63, 94, 0.42)",
+    symbol: "🚫",
+    color: "#7f1d1d",
+    glow: "rgba(239, 68, 68, 0.3)",
     desc: "Critical issues detected. Release should not proceed.",
   },
 ];
@@ -180,38 +135,49 @@ const chatTranscript = [
   {
     side: "left",
     name: "You",
-    role: "Release Engineer",
-    text: "Reckit Ralph, audit checkout rewrite. We need confidence before merge.",
-    meta: "Command: reckit-ralph audit ./checkout --mode rebuild",
+    role: "Developer",
+    text: "Use wreckit to audit ~/Projects/checkout. Don't change anything.",
+    meta: 'Mode: AUDIT — read-only verification',
   },
   {
     side: "right",
-    name: "Reckit Ralph",
-    role: "Verification Orchestrator",
-    text: "Run accepted. Launching 11 gates: Ralph Loop plus test, security, architecture, and replay verification.",
-    meta: "Workers: 18 parallel agents",
-  },
-  {
-    side: "left",
-    name: "You",
-    role: "Release Engineer",
-    text: "Good. Highlight any hidden regressions and attach proof artifacts.",
-    meta: "Priority: strict",
+    name: "wreckit",
+    role: "Verification Engine",
+    text: "Running 14 verification gates against ~/Projects/checkout. Stack detected: TypeScript / Next.js / Vitest.",
+    meta: "14 gates queued",
   },
   {
     side: "right",
-    name: "Reckit Ralph",
-    role: "Verification Orchestrator",
-    text: "Mutation gate found one weak assertion cluster. Suggested patch included, rerunning downstream checks now.",
-    meta: "Mutation kill rate: 82 percent",
+    name: "wreckit",
+    role: "Verification Engine",
+    text: "Mutation gate found one weak assertion cluster in checkout/payment.ts. Kill rate 71% — below 80% threshold.",
+    meta: "Gate: Mutation Kill — CAUTION",
   },
   {
     side: "right",
-    name: "Reckit Ralph",
-    role: "Verification Orchestrator",
-    text: "Final verdict: SHIP. Signed evidence bundle generated with full gate-by-gate trace.",
-    meta: "Artifact: .wreckit/proof-2026-02-23.json",
+    name: "wreckit",
+    role: "Verification Engine",
+    text: "Final verdict: CAUTION ⚠️. 13 gates passed, 1 below threshold. Proof bundle written to .wreckit/proof.json",
+    meta: "Artifact: .wreckit/proof.json",
   },
+];
+
+const scripts = [
+  { name: "run-all-gates.sh", args: "[path] [mode]", desc: "Full sequential pipeline with telemetry" },
+  { name: "slop-scan.sh", args: "[path]", desc: "Semantic slop detection — placeholders, stubs, dead code" },
+  { name: "type-check.sh", args: "[path]", desc: "tsc / mypy / cargo check / go vet" },
+  { name: "red-team.sh", args: "[path]", desc: "20+ SAST vulnerability patterns + ReDoS" },
+  { name: "mutation-test.sh", args: "[path]", desc: "mutmut / Stryker / cargo-mutants / AI fallback" },
+  { name: "proof-bundle.sh", args: "[path] [mode]", desc: "Corroborated verdict + .wreckit/ artifacts" },
+  { name: "dynamic-analysis.sh", args: "[path]", desc: "Memory leaks, race conditions, FD leaks" },
+  { name: "design-review.sh", args: "[path]", desc: "Dep graph, circular deps, coupling analysis" },
+];
+
+const usageCommands = [
+  { cmd: '"Use wreckit to audit ~/Projects/myapp. Don\'t change anything."', mode: "AUDIT" },
+  { cmd: '"Use wreckit to build a REST API from this PRD."', mode: "BUILD" },
+  { cmd: '"Use wreckit to fix this bug. Prove nothing else breaks."', mode: "FIX" },
+  { cmd: '"Use wreckit to rebuild this codebase in TypeScript."', mode: "REBUILD" },
 ];
 
 const gateGradients = [
@@ -226,29 +192,31 @@ const gateGradients = [
   "linear-gradient(135deg, #f97316, #facc15)",
   "linear-gradient(135deg, #facc15, #22c55e)",
   "linear-gradient(135deg, #22c55e, #06b6d4)",
+  "linear-gradient(135deg, #06b6d4, #6366f1)",
+  "linear-gradient(135deg, #6366f1, #db2777)",
+  "linear-gradient(135deg, #db2777, #8b5cf6)",
 ];
 
 const proofJson = `{
-  "version": "2.1.0",
-  "timestamp": "2026-02-23T18:11:41Z",
-  "project": "./checkout",
-  "stack": "TypeScript / Next.js / Vitest",
   "verdict": "SHIP",
-  "score": 96,
+  "run_id": "a3f8c2d1-9e4b-4a7c-b8f6-2d1e3a5c7b9d",
+  "git_sha": "abc123f",
+  "timestamp": "2026-03-20T04:22:11Z",
   "gates": {
-    "slop_scan": { "status": "PASS", "artifacts": 0 },
-    "type_check": { "status": "PASS", "errors": 0 },
-    "ralph_loop": { "status": "PASS", "exploits_found": 0 },
-    "test_quality": { "status": "PASS", "coverage": 92, "assertions_per_test": 3.1 },
-    "mutation_kill": { "status": "PASS", "kill_rate": 0.82 },
-    "cross_verify": { "status": "PASS", "oracle_agreement": true },
-    "sast": { "status": "PASS", "high_findings": 0 },
-    "design_review": { "status": "PASS", "circular_deps": 0 },
-    "ci_integration": { "status": "PASS", "config": "github-actions" },
-    "runtime_replay": { "status": "PASS", "deterministic": true },
-    "proof_bundle": { "status": "GENERATED", "path": ".wreckit/proof-2026-02-23.json" }
+    "slop_scan":    { "status": "PASS", "density": 1.2 },
+    "type_check":   { "status": "PASS", "errors": 0 },
+    "ralph_loop":   { "status": "PASS", "exploits": 0 },
+    "test_quality": { "status": "PASS", "coverage": 92 },
+    "mutation":     { "status": "PASS", "kill_rate": 94 },
+    "cross_verify": { "status": "PASS", "oracle_agrees": true },
+    "sast":         { "status": "PASS", "blockers": 0 },
+    "dynamic":      { "status": "PASS", "leaks": 0 },
+    "design":       { "status": "PASS", "circular_deps": 0 },
+    "red_team":     { "status": "PASS", "blockers": 0 }
   }
 }`;
+
+/* ────────────────────────────── HELPERS ────────────────────────────── */
 
 function highlightJson(json: string) {
   const escaped = json
@@ -257,12 +225,13 @@ function highlightJson(json: string) {
     .replace(/>/g, "&gt;");
 
   return escaped
-    .replace(/"([^"]+)":/g, '<span class="text-[#6366f1]">"$1"</span>:')
-    .replace(/: "([^"]*)"/g, ': <span class="text-[#0ea5e9]">"$1"</span>')
+    .replace(/"([^"]+)":/g, '<span class="text-[#8b5cf6]">"$1"</span>:')
+    .replace(/: "([^"]*)"/g, ': <span class="text-[#06b6d4]">"$1"</span>')
     .replace(/: (\d+(\.\d+)?)/g, ': <span class="text-[#f59e0b]">$1</span>')
-    .replace(/(PASS|GENERATED|SHIP)/g, '<span class="text-[#16a34a]">$1</span>')
-    .replace(/CAUTION/g, '<span class="text-[#d97706]">CAUTION</span>')
-    .replace(/BLOCKED/g, '<span class="text-[#e11d48]">BLOCKED</span>');
+    .replace(/(PASS|GENERATED|SHIP)/g, '<span class="text-[#10b981]">$1</span>')
+    .replace(/: (true|false)/g, ': <span class="text-[#06b6d4]">$1</span>')
+    .replace(/CAUTION/g, '<span class="text-[#f59e0b]">CAUTION</span>')
+    .replace(/BLOCKED/g, '<span class="text-[#ef4444]">BLOCKED</span>');
 }
 
 function useScrollTop() {
@@ -303,6 +272,8 @@ function useCountUp(target: number, active: boolean) {
   return count;
 }
 
+/* ────────────────────────────── COMPONENTS ────────────────────────────── */
+
 function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <div className="mx-auto mb-10 max-w-3xl text-center">
@@ -341,118 +312,14 @@ function Reveal({
   );
 }
 
-function CrackDivider() {
-  return (
-    <div className="relative h-16">
-      <svg
-        viewBox="0 0 1200 120"
-        className="absolute inset-0 h-full w-full"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M0 60 L150 55 L220 70 L320 50 L410 65 L520 40 L640 70 L760 55 L860 75 L980 50 L1100 70 L1200 60 V120 H0 Z"
-          fill="#ffffff"
-        />
-        <path
-          d="M0 60 L150 55 L220 70 L320 50 L410 65 L520 40 L640 70 L760 55 L860 75 L980 50 L1100 70 L1200 60"
-          stroke="#d6bcfa"
-          strokeWidth="2"
-          fill="none"
-        />
-      </svg>
-    </div>
-  );
-}
-
-function WaitlistSection() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
-      setStatus("loading");
-      setErrorMsg("");
-      try {
-        const res = await fetch("/api/subscribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          setErrorMsg(data.error || "Something went wrong.");
-          setStatus("error");
-        } else {
-          setStatus("success");
-        }
-      } catch {
-        setErrorMsg("Network error. Please try again.");
-        setStatus("error");
-      }
-    },
-    [email],
-  );
-
-  return (
-    <section className="relative bg-[var(--bg-secondary)] px-6 py-24" id="waitlist">
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)]">Early access</p>
-        <h2 className="mt-3 font-display text-3xl font-semibold text-[var(--text)] sm:text-4xl">
-          Be first to ship bulletproof code
-        </h2>
-        <p className="mt-4 text-sm text-slate-600">
-          Join the waitlist now and lock in early-access pricing when we launch. No spam, just updates.
-        </p>
-
-        {status === "success" ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#dcfce7] px-6 py-3 text-sm font-semibold text-[#16a34a]"
-          >
-            <CheckCircle2 className="h-4 w-4" />
-            You&apos;re on the list! We&apos;ll be in touch.
-          </motion.div>
-        ) : (
-          <form onSubmit={handleSubmit} className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <input
-              type="email"
-              required
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="h-12 w-full max-w-sm rounded-full border border-slate-300 bg-white px-5 text-sm text-slate-800 outline-none transition focus:border-[var(--purple)] focus:ring-2 focus:ring-[var(--purple)]/20 sm:w-80"
-            />
-            <Button
-              type="submit"
-              disabled={status === "loading"}
-              className="h-12 rounded-full bg-[var(--grad-primary)] px-8 text-white shadow-[0_12px_24px_rgba(99,102,241,0.3)] hover:opacity-90 disabled:opacity-60"
-            >
-              {status === "loading" ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                "Join waitlist"
-              )}
-            </Button>
-          </form>
-        )}
-
-        {status === "error" && errorMsg && (
-          <p className="mt-3 text-sm text-[#e11d48]">{errorMsg}</p>
-        )}
-      </div>
-    </section>
-  );
-}
+/* ────────────────────────────── MAIN PAGE ────────────────────────────── */
 
 export default function MarketingPage() {
   const scrolled = useScrollTop();
   const gateRef = useRef(null);
   const gateInView = useInView(gateRef, { once: true, margin: "-120px" });
   const highlightedProof = useMemo(() => highlightJson(proofJson), []);
-  const gateCount = useCountUp(11, gateInView);
+  const gateCount = useCountUp(14, gateInView);
 
   const gateStagger = useMemo(
     () => ({
@@ -460,7 +327,7 @@ export default function MarketingPage() {
       show: (index: number) => ({
         opacity: 1,
         y: 0,
-        transition: { duration: 0.6, delay: index * 0.06 },
+        transition: { duration: 0.6, delay: index * 0.05 },
       }),
     }),
     []
@@ -471,61 +338,62 @@ export default function MarketingPage() {
       <div className="aurora-field" aria-hidden="true" />
       <div className="scanline-overlay pointer-events-none" aria-hidden="true" />
 
+      {/* ═══════════ NAV ═══════════ */}
       <nav
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all",
-          scrolled ? "glassline border-b border-violet-200/70" : ""
+          scrolled ? "glassline border-b border-[rgba(139,92,246,0.15)]" : ""
         )}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-3 font-display text-lg font-bold">
             <div className="logo-tile" aria-hidden="true">
-              <Gamepad2 className="h-4 w-4" />
+              <Code2 className="h-4 w-4" />
             </div>
-            <span className="text-gradient">Reckit Ralph</span>
+            <span className="text-gradient">wreckit</span>
           </div>
-          <div className="hidden items-center gap-8 text-sm text-slate-600 md:flex">
+          <div className="hidden items-center gap-8 text-sm md:flex">
             {[
               { label: "How It Works", href: "#how" },
-              { label: "Chat Flow", href: "#chat" },
               { label: "Gates", href: "#gates" },
+              { label: "Usage", href: "#usage" },
+              { label: "Scripts", href: "#scripts" },
               { label: "Proof", href: "#proof" },
-              { label: "Pricing", href: "#pricing" },
             ].map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="relative text-slate-700 transition hover:text-slate-900 after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--grad-text)] after:transition-all hover:after:w-full"
+                className="relative text-[var(--text-muted)] transition hover:text-[var(--text)] after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--grad-text)] after:transition-all hover:after:w-full"
               >
                 {item.label}
               </a>
             ))}
-            <a
-              href="/blog"
-              className="relative text-slate-700 transition hover:text-slate-900 after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-0 after:bg-[var(--grad-text)] after:transition-all hover:after:w-full"
-            >
-              Blog
-            </a>
           </div>
-          <Button className="rounded-full bg-[var(--grad-primary)] text-white shadow-[0_12px_24px_rgba(99,102,241,0.3)] hover:opacity-90">
-            Run Reckit Ralph
+          <Button
+            className="rounded-full bg-[var(--grad-primary)] text-white shadow-[0_8px_20px_rgba(139,92,246,0.3)] hover:opacity-90"
+            asChild
+          >
+            <a href="https://clawhub.com" target="_blank" rel="noreferrer">
+              Install on ClawHub
+            </a>
           </Button>
         </div>
       </nav>
 
+      {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-screen overflow-hidden px-6 pb-24 pt-28">
         <div className="absolute inset-0 mesh-bg" />
         <div className="absolute inset-0 opacity-80" aria-hidden="true">
           <div
-            className="blob left-[-10%] top-[-20%] h-[440px] w-[440px] bg-[radial-gradient(circle,_rgba(99,102,241,0.58),_transparent_70%)]"
+            className="blob left-[-10%] top-[-20%] h-[440px] w-[440px] bg-[radial-gradient(circle,_rgba(99,102,241,0.3),_transparent_70%)]"
             style={{ animation: "morph 16s ease-in-out infinite" }}
           />
           <div
-            className="blob right-[-12%] top-[8%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(16,185,129,0.4),_transparent_70%)]"
+            className="blob right-[-12%] top-[8%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(6,182,212,0.2),_transparent_70%)]"
             style={{ animation: "morph 18s ease-in-out infinite" }}
           />
           <div
-            className="blob bottom-[-20%] left-[20%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(236,72,153,0.4),_transparent_70%)]"
+            className="blob bottom-[-20%] left-[20%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(236,72,153,0.2),_transparent_70%)]"
             style={{ animation: "morph 20s ease-in-out infinite" }}
           />
         </div>
@@ -543,32 +411,38 @@ export default function MarketingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="mb-4 text-xs uppercase tracking-[0.3em] text-slate-500">
-              Reckit Ralph verification engine
-            </p>
-            <h1 className="font-display text-5xl font-extrabold leading-[0.95] sm:text-6xl lg:text-7xl">
-              <span className="text-gradient-strong shimmer block glitch-text">RECKIT RALPH</span>
-              <span className="text-gradient-strong shimmer block">PROVES RELEASES</span>
-              <span className="mt-2 block text-3xl font-bold text-[var(--text)] sm:text-4xl">
-                Beyond loops. Full evidence.
-              </span>
+            <h1 className="font-display text-6xl font-extrabold leading-[0.95] sm:text-7xl lg:text-8xl">
+              <span className="text-gradient-strong shimmer block glitch-text">wreckit</span>
             </h1>
-            <p className="mt-5 text-sm uppercase tracking-[0.28em] text-slate-500">
-              Build it. Break it. Verify every gate.
+            <p className="mt-4 font-display text-2xl font-semibold text-[var(--text)] sm:text-3xl">
+              Bulletproof AI code verification.
             </p>
-            <p className="mt-5 max-w-xl text-lg text-slate-700">
-              Reckit Ralph is not just a Ralph loop runner. It is a multi-gate
-              verification and evidence engine that audits quality, security, design,
-              and runtime behavior before production.
+            <p className="mt-5 max-w-xl text-lg text-[var(--text-muted)]">
+              The agent IS the engine. No external CI required. Spawns parallel verification
+              workers that slop-scan, type-check, mutation-test, and cross-verify before
+              shipping. Ship proof, not vibes.
             </p>
+
+            {/* Install command */}
+            <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-[rgba(139,92,246,0.2)] bg-[rgba(13,13,22,0.8)] px-5 py-3 font-mono text-sm">
+              <span className="text-[var(--text-muted)]">$</span>
+              <span className="text-[var(--purple)]">clawhub install</span>
+              <span className="text-[var(--text)]">wreckit</span>
+            </div>
+
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button className="rounded-full bg-[var(--grad-primary)] px-6 py-6 text-base text-white shadow-[0_12px_24px_rgba(99,102,241,0.3)] hover:opacity-90">
-                Start Verification
-                <ArrowRight className="ml-2 h-4 w-4" />
+              <Button
+                className="rounded-full bg-[var(--grad-primary)] px-6 py-6 text-base text-white shadow-[0_12px_24px_rgba(139,92,246,0.3)] hover:opacity-90"
+                asChild
+              >
+                <a href="https://clawhub.com" target="_blank" rel="noreferrer">
+                  Install on ClawHub
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full border-slate-300 px-6 py-6 text-base text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                className="rounded-full border-[rgba(139,92,246,0.3)] px-6 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
                 asChild
               >
                 <a
@@ -580,18 +454,19 @@ export default function MarketingPage() {
                 </a>
               </Button>
             </div>
-            <div className="mt-10 flex flex-wrap items-center gap-6 text-sm text-slate-600">
+
+            <div className="mt-10 flex flex-wrap items-center gap-6 text-sm text-[var(--text-muted)]">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-[var(--purple)]" />
-                11-gate verification
+                14-gate verification
               </div>
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-[var(--rose)]" />
-                Signed evidence artifacts
+                Signed proof bundles
               </div>
               <div className="flex items-center gap-2">
                 <Cpu className="h-4 w-4 text-[var(--cyan)]" />
-                Parallel specialist workers
+                Parallel workers
               </div>
             </div>
           </motion.div>
@@ -608,100 +483,157 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      <section className="relative bg-[var(--bg-secondary)] px-6 py-24" id="problem">
-        <SectionHeader
-          title="Code that sounds correct can still break in production"
-          subtitle="The problem"
-        />
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
-          {painPoints.map((item, index) => (
-            <Reveal key={item.title} delay={index * 0.1} className="card card-hover p-6">
-              <item.icon className="h-6 w-6 text-[var(--rose)]" />
-              <h3 className="mt-4 text-xl font-semibold text-[var(--text)]">{item.title}</h3>
-              <p className="mt-3 text-sm text-slate-600">{item.copy}</p>
+      {/* ═══════════ HOW IT WORKS ═══════════ */}
+      <section className="relative px-6 py-24" id="how">
+        <div className="absolute inset-0 grid-bg opacity-30" />
+        <div className="relative">
+          <SectionHeader title="Three steps to verified code" subtitle="How it works" />
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3">
+            {steps.map((step, index) => (
+              <Reveal key={step.title} delay={index * 0.12} className="card card-hover p-6 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-xl font-bold text-white"
+                  style={{ background: gateGradients[index * 4] }}
+                >
+                  0{index + 1}
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-[var(--text)]">{step.title}</h3>
+                <p className="mt-3 text-sm text-[var(--text-muted)]">{step.copy}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ MODES ═══════════ */}
+      <section className="relative bg-[var(--bg-secondary)] px-6 py-24" id="modes">
+        <SectionHeader title="Four modes. One engine." subtitle="Modes" />
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">
+          {modes.map((mode, index) => (
+            <Reveal
+              key={mode.name}
+              delay={index * 0.1}
+              className="card card-hover group relative overflow-hidden p-6"
+            >
+              <div
+                className="absolute inset-0 opacity-0 transition group-hover:opacity-[0.06]"
+                style={{ background: mode.color }}
+              />
+              <div className="relative">
+                <div className="mb-4 h-1 w-full rounded-full opacity-60" style={{ background: mode.color }} />
+                <div className="flex items-center gap-3">
+                  <div className="mode-chip" style={{ background: mode.color }}>
+                    {mode.chip}
+                  </div>
+                  <h3 className="text-xl font-semibold text-[var(--text)]">
+                    <span className="mr-2">{mode.emoji}</span>
+                    {mode.name}
+                  </h3>
+                </div>
+                <p className="mt-2 text-sm text-[var(--purple)]">{mode.trigger}</p>
+                <p className="mt-3 text-sm text-[var(--text-muted)]">{mode.desc}</p>
+              </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      <CrackDivider />
-
-      <section className="relative px-6 py-24" id="how">
-        <SectionHeader title="Three stages, one trusted outcome" subtitle="How it works" />
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-6">
-            {steps.map((step, index) => (
-              <Reveal key={step.title} delay={index * 0.1} className="card card-hover p-6">
-                <div className="flex items-start gap-5">
-                  <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eef2ff] text-lg font-bold text-[var(--purple)]">
-                    0{index + 1}
-                    <span className="absolute -right-10 top-1/2 -translate-y-1/2 text-6xl font-bold text-[#dbeafe]">
-                      0{index + 1}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-[var(--text)]">{step.title}</h3>
-                    <p className="mt-2 text-sm text-slate-600">{step.copy}</p>
-                    {index === 2 ? (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-xs font-semibold text-[#16a34a]">
-                          SHIP
-                        </span>
-                        <span className="rounded-full bg-[#fef3c7] px-3 py-1 text-xs font-semibold text-[#d97706]">
-                          CAUTION
-                        </span>
-                        <span className="rounded-full bg-[#ffe4e6] px-3 py-1 text-xs font-semibold text-[#e11d48]">
-                          BLOCKED
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal className="card card-hover p-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-[var(--text)]">Multi-Gate Core</h3>
-              <span className="rounded-full bg-[#e0e7ff] px-3 py-1 text-xs font-semibold text-[var(--purple)]">
-                Evidence First
+      {/* ═══════════ GATES ═══════════ */}
+      <section className="relative px-6 py-24" id="gates">
+        <div className="absolute inset-0 grid-bg opacity-30" />
+        <div className="relative">
+          <div className="mx-auto mb-12 max-w-4xl text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)]">Verification</p>
+            <h2 className="mt-3 text-3xl font-semibold text-[var(--text)] sm:text-4xl">
+              14 gates. Each one earns trust.
+            </h2>
+            <div className="mt-4 flex items-center justify-center gap-4 text-sm text-[var(--text-muted)]">
+              <span className="rounded-full border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.08)] px-4 py-2 font-semibold text-[var(--purple)]">
+                {gateCount} gates
+              </span>
+              <span className="rounded-full border border-[rgba(6,182,212,0.3)] bg-[rgba(6,182,212,0.08)] px-4 py-2 font-semibold text-[var(--cyan)]">
+                + proof bundle
               </span>
             </div>
-            <p className="mt-2 text-sm text-slate-600">
-              Reckit Ralph orchestrates specialists for each gate. Ralph Loop pressure-tests
-              logic, while other workers validate quality, security, architecture, CI, and
-              runtime replay before final scoring.
-            </p>
-            <div className="mt-6 flex items-center justify-center">
-              <div className="relative flex h-44 w-44 items-center justify-center rounded-full border border-slate-200 bg-white">
-                <span className="text-xs uppercase tracking-[0.3em] text-slate-500">
-                  Core
-                </span>
-                {Array.from({ length: 8 }).map((_, index) => {
-                  const angle = (index / 8) * Math.PI * 2;
-                  const radius = 88;
-                  const x = Math.cos(angle) * radius;
-                  const y = Math.sin(angle) * radius;
-                  return (
-                    <div
-                      key={index}
-                      className="absolute h-8 w-8 rounded-full border border-slate-200 bg-[#f8fafc]"
-                      style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }}
-                    />
-                  );
-                })}
+          </div>
+          <div
+            ref={gateRef}
+            className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          >
+            {gates.map((gate, index) => (
+              <motion.div
+                key={gate.name}
+                custom={index}
+                variants={gateStagger}
+                initial="hidden"
+                animate={gateInView ? "show" : "hidden"}
+                className="card card-hover group relative overflow-hidden p-5"
+              >
+                <div
+                  className="absolute inset-0 opacity-0 transition group-hover:opacity-[0.06]"
+                  style={{ background: gateGradients[index % gateGradients.length] }}
+                />
+                <div className="relative flex items-center justify-between">
+                  <div
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold text-white"
+                    style={{ background: gateGradients[index % gateGradients.length] }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <gate.icon className="h-4 w-4 text-[var(--text-muted)]" />
+                </div>
+                <h3 className="mt-3 text-sm font-semibold text-[var(--text)]">{gate.name}</h3>
+                <p className="mt-1.5 text-xs text-[var(--text-muted)]">{gate.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════ USAGE ═══════════ */}
+      <section className="relative bg-[var(--bg-secondary)] px-6 py-24" id="usage">
+        <SectionHeader title="Natural language. Real verification." subtitle="Usage" />
+        <div className="mx-auto max-w-3xl space-y-4">
+          {usageCommands.map((item, index) => (
+            <Reveal key={item.cmd} delay={index * 0.08}>
+              <div className="flex items-start gap-4 rounded-xl border border-[rgba(139,92,246,0.12)] bg-[var(--bg-card)] p-5">
+                <div
+                  className="mt-0.5 flex h-7 w-14 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                  style={{
+                    background: modes.find((m) => m.name === item.mode)?.color ?? gateGradients[0],
+                  }}
+                >
+                  {item.mode}
+                </div>
+                <p className="font-mono text-sm text-[var(--text)]">{item.cmd}</p>
               </div>
+            </Reveal>
+          ))}
+          <Reveal delay={0.4}>
+            <div className="mt-8 text-center">
+              <p className="text-sm text-[var(--text-muted)]">
+                wreckit is an{" "}
+                <a
+                  href="https://clawhub.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[var(--purple)] underline decoration-[var(--purple)]/30 hover:decoration-[var(--purple)]"
+                >
+                  OpenClaw
+                </a>{" "}
+                skill — you talk to your agent, it runs wreckit.
+              </p>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="relative bg-[#f8fafc] px-6 py-24" id="chat">
+      {/* ═══════════ CHAT FLOW ═══════════ */}
+      <section className="relative px-6 py-24" id="chat">
         <SectionHeader
-          title="Back-and-forth verification, like a game session"
+          title="Verification as conversation"
           subtitle="Chat Flow"
         />
-        <div className="mx-auto max-w-5xl rounded-[28px] border border-violet-200/60 bg-white/50 p-6 shadow-[0_24px_60px_rgba(76,29,149,0.16)] backdrop-blur md:p-10">
+        <div className="mx-auto max-w-4xl rounded-[28px] border border-[rgba(139,92,246,0.15)] bg-[rgba(10,10,18,0.6)] p-6 shadow-[0_24px_60px_rgba(0,0,0,0.3)] backdrop-blur md:p-10">
           <div className="space-y-4">
             {chatTranscript.map((message, index) => {
               const isRight = message.side === "right";
@@ -723,20 +655,20 @@ export default function MarketingPage() {
                     <div className="mb-2 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-2">
                         {isRight ? (
-                          <Bot className="h-4 w-4 text-violet-100" />
+                          <Bot className="h-4 w-4 text-violet-200" />
                         ) : (
-                          <UserRound className="h-4 w-4 text-slate-700" />
+                          <UserRound className="h-4 w-4 text-[var(--text-muted)]" />
                         )}
                         <p className="text-xs font-semibold uppercase tracking-[0.12em]">
                           {message.name}
                         </p>
                       </div>
-                      <span className="text-[10px] uppercase tracking-[0.12em] opacity-80">
+                      <span className="text-[10px] uppercase tracking-[0.12em] opacity-60">
                         {message.role}
                       </span>
                     </div>
                     <p className="text-sm leading-relaxed">{message.text}</p>
-                    <p className="mt-3 border-t border-current/15 pt-2 text-[11px] opacity-85">
+                    <p className="mt-3 border-t border-current/10 pt-2 text-[11px] opacity-60">
                       {message.meta}
                     </p>
                   </div>
@@ -747,107 +679,51 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      <section className="relative bg-white px-6 py-24" id="gates">
-        <div className="absolute inset-0 grid-bg opacity-50" />
-        <div className="relative">
-          <div className="mx-auto mb-12 max-w-4xl text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)]">Verification</p>
-            <h2 className="mt-3 text-3xl font-semibold text-[var(--text)] sm:text-4xl">
-              Eleven gates. Ralph Loop is one of them.
-            </h2>
-            <div className="mt-4 flex items-center justify-center gap-4 text-sm text-slate-600">
-              <span className="rounded-full bg-[#eef2ff] px-4 py-2 font-semibold text-[var(--purple)]">
-                {gateCount} gates running
-              </span>
-              <span className="rounded-full bg-[#ecfeff] px-4 py-2 font-semibold text-[#0891b2]">
-                1 evidence bundle generated
-              </span>
-            </div>
-          </div>
-          <div
-            ref={gateRef}
-            className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          >
-            {gates.map((gate, index) => (
-              <motion.div
-                key={gate.name}
-                custom={index}
-                variants={gateStagger}
-                initial="hidden"
-                animate={gateInView ? "show" : "hidden"}
-                className="card card-hover group relative overflow-hidden p-5"
-              >
-                <div
-                  className="absolute inset-0 opacity-0 transition group-hover:opacity-10"
-                  style={{ background: gateGradients[index % gateGradients.length] }}
-                />
-                <div className="relative flex items-center justify-between">
-                  <div
-                    className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold text-white"
-                    style={{ background: gateGradients[index % gateGradients.length] }}
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <gate.icon className="h-5 w-5 text-slate-500" />
+      {/* ═══════════ SCRIPTS ═══════════ */}
+      <section className="relative bg-[var(--bg-secondary)] px-6 py-24" id="scripts">
+        <SectionHeader title="24 deterministic scripts" subtitle="Scripts" />
+        <p className="mx-auto -mt-6 mb-10 max-w-2xl text-center text-sm text-[var(--text-muted)]">
+          The heart of wreckit. Each script is a standalone gate — run them individually or let the orchestrator run the full pipeline.
+        </p>
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2">
+          {scripts.map((script, index) => (
+            <Reveal key={script.name} delay={index * 0.06}>
+              <div className="rounded-xl border border-[rgba(139,92,246,0.1)] bg-[var(--bg-card)] p-4">
+                <div className="font-mono text-sm">
+                  <span className="text-[var(--purple)]">{script.name}</span>
+                  <span className="ml-2 text-[var(--text-muted)]">{script.args}</span>
                 </div>
-                <h3 className="mt-4 text-base font-semibold text-[var(--text)]">{gate.name}</h3>
-                <p className="mt-2 text-sm text-slate-600">{gate.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="relative bg-[#fafafa] px-6 py-24" id="modes">
-        <SectionHeader title="One engine. Multiple release modes." subtitle="Modes" />
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">
-          {modes.map((mode, index) => (
-            <Reveal
-              key={mode.name}
-              delay={index * 0.1}
-              className="card card-hover group relative overflow-hidden p-6"
-            >
-              <div
-                className="absolute inset-0 opacity-0 transition group-hover:opacity-10"
-                style={{ background: mode.color }}
-              />
-              <div className="relative">
-                <div className="mb-4 h-1 w-full rounded-full" style={{ background: mode.color }} />
-                <div className="flex items-center gap-3">
-                  <div className="mode-chip" style={{ background: mode.color }}>
-                    {mode.chip}
-                  </div>
-                  <h3 className="text-xl font-semibold text-[var(--text)]">{mode.name}</h3>
-                </div>
-                <p className="mt-2 text-sm text-slate-600">{mode.trigger}</p>
-                <p className="mt-4 text-sm text-slate-700">{mode.desc}</p>
+                <p className="mt-2 text-xs text-[var(--text-muted)]">{script.desc}</p>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      <section className="relative bg-[var(--bg-secondary)] px-6 py-24" id="proof">
-        <SectionHeader title="Every run leaves an audit receipt" subtitle="Proof bundle" />
+      {/* ═══════════ PROOF BUNDLE ═══════════ */}
+      <section className="relative px-6 py-24" id="proof">
+        <SectionHeader title="Every run leaves a proof trail" subtitle="Proof bundle" />
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-[1fr_1.1fr]">
-          <Reveal className="space-y-4">
-            <h3 className="text-2xl font-semibold text-[var(--text)]">Evidence that teams can trust</h3>
-            <p className="text-sm text-slate-700">
-              Reckit Ralph writes a signed proof bundle in <code>.wreckit/</code> with
-              gate output, thresholds, replay metadata, and final verdict reasoning.
-              Security and platform teams can review exactly why a release was approved.
+          <Reveal className="space-y-5">
+            <h3 className="text-2xl font-semibold text-[var(--text)]">Machine-verifiable evidence</h3>
+            <p className="text-sm text-[var(--text-muted)]">
+              wreckit writes a tamper-evident proof bundle in <code className="rounded bg-[rgba(139,92,246,0.12)] px-1.5 py-0.5 text-[var(--purple)]">.wreckit/</code> with
+              gate output, thresholds, and final verdict reasoning. Review exactly why a
+              release was approved — or blocked.
             </p>
-            <ul className="space-y-3 text-sm text-slate-700">
-              <li>Gate-by-gate artifact trail with timestamps</li>
-              <li>Signed verdict, score, and policy thresholds</li>
-              <li>Deterministic metadata for reproducible reruns</li>
-            </ul>
+            <div className="space-y-2 font-mono text-sm text-[var(--text-muted)]">
+              <p className="text-[var(--text)]">.wreckit/</p>
+              <p className="pl-4">├── proof.json <span className="text-[var(--text-muted)]">← machine-readable verdict</span></p>
+              <p className="pl-4">├── dashboard.json <span className="text-[var(--text-muted)]">← external tooling schema</span></p>
+              <p className="pl-4">├── decision.md <span className="text-[var(--text-muted)]">← human-readable reasoning</span></p>
+              <p className="pl-4">└── raw/ <span className="text-[var(--text-muted)]">← raw script output per gate</span></p>
+            </div>
           </Reveal>
-          <Reveal className="receipt p-6 font-mono text-xs text-slate-700">
+          <Reveal className="receipt p-6 font-mono text-xs text-[var(--text-muted)]">
             <div className="stamp">VERIFIED</div>
             <div className="mb-4 flex items-center justify-between">
-              <div className="text-xs text-slate-500">.wreckit/proof.json</div>
-              <Badge className="bg-[#16a34a] text-white shadow-[0_0_20px_rgba(22,163,74,0.3)]">
+              <div className="text-xs text-[var(--text-muted)]">.wreckit/proof.json</div>
+              <Badge className="bg-[#10b981] text-white shadow-[0_0_20px_rgba(16,185,129,0.3)]">
                 SHIP
               </Badge>
             </div>
@@ -859,9 +735,10 @@ export default function MarketingPage() {
         </div>
       </section>
 
-      <section className="relative px-6 py-24" id="verdicts">
+      {/* ═══════════ VERDICTS ═══════════ */}
+      <section className="relative bg-[var(--bg-secondary)] px-6 py-24" id="verdicts">
         <SectionHeader title="Three outcomes. No ambiguity." subtitle="Verdicts" />
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
           {verdicts.map((verdict, index) => (
             <Reveal key={verdict.name} delay={index * 0.1} className="p-2">
               <div
@@ -874,121 +751,82 @@ export default function MarketingPage() {
                   } as CSSProperties
                 }
               >
-                <h3 className="text-xl font-semibold tracking-wide">{verdict.name}</h3>
-                <p className="mt-2 text-sm text-white/85">{verdict.desc}</p>
+                <div className="text-3xl">{verdict.symbol}</div>
+                <h3 className="mt-2 text-xl font-semibold tracking-wide">{verdict.name}</h3>
+                <p className="mt-2 text-sm text-white/75">{verdict.desc}</p>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="relative bg-white px-6 py-24" id="pricing">
-        <div className="absolute inset-0 grid-bg opacity-50" />
-        <div className="relative">
-          <SectionHeader title="Simple, transparent pricing" subtitle="Pricing" />
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
-            {/* Open Source */}
-            <Reveal delay={0} className="card card-hover relative overflow-hidden p-6">
-              <h3 className="text-xl font-semibold text-[var(--text)]">Open Source</h3>
-              <p className="mt-1 text-sm text-slate-500">For OSS projects</p>
-              <p className="mt-6 font-display text-4xl font-bold text-[var(--text)]">
-                Free
-                <span className="ml-1 text-base font-normal text-slate-500">forever</span>
+      {/* ═══════════ INSTALL ═══════════ */}
+      <section className="relative px-6 py-24" id="install">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)]">Get started</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold text-[var(--text)] sm:text-4xl">
+            Install in one command
+          </h2>
+          <div className="mx-auto mt-8 max-w-md">
+            <div className="code-block p-5 text-left">
+              <p className="text-[var(--text-muted)]"># Via ClawHub (recommended)</p>
+              <p className="mt-1">
+                <span className="text-[var(--text-muted)]">$ </span>
+                <span className="text-[var(--purple)]">clawhub install</span>{" "}
+                <span className="text-[var(--text)]">wreckit</span>
               </p>
-              <ul className="mt-6 space-y-3 text-sm text-slate-700">
-                {["All 11 verification gates", "CLI + GitHub Actions", "Community support", "Public repo only"].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[var(--purple)]" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button
-                className="mt-8 w-full rounded-full border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
-                variant="outline"
-                asChild
-              >
-                <a href="https://github.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
-                  Get started
-                </a>
-              </Button>
-            </Reveal>
-
-            {/* Pro */}
-            <Reveal delay={0.1} className="card card-hover relative overflow-hidden border-2 border-[var(--purple)] p-6">
-              <Badge className="absolute right-4 top-4 bg-[var(--grad-primary)] text-white">
-                Most popular
-              </Badge>
-              <h3 className="text-xl font-semibold text-[var(--text)]">Pro</h3>
-              <p className="mt-1 text-sm text-slate-500">For teams &lt;10 devs</p>
-              <p className="mt-6 font-display text-4xl font-bold text-[var(--text)]">
-                $49
-                <span className="ml-1 text-base font-normal text-slate-500">/mo</span>
+              <p className="mt-4 text-[var(--text-muted)]"># Then use it:</p>
+              <p className="mt-1 text-[var(--cyan)]">
+                &quot;Use wreckit to audit ~/Projects/myapp&quot;
               </p>
-              <ul className="mt-6 space-y-3 text-sm text-slate-700">
-                {["Everything in Free", "Private repositories", "Priority gate execution", "Email + Slack support"].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[var(--purple)]" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button className="mt-8 w-full rounded-full bg-[var(--grad-primary)] text-white shadow-[0_12px_24px_rgba(99,102,241,0.3)] hover:opacity-90" asChild>
-                <a href="#waitlist">Join waitlist</a>
-              </Button>
-            </Reveal>
-
-            {/* Team */}
-            <Reveal delay={0.2} className="card card-hover relative overflow-hidden p-6">
-              <h3 className="text-xl font-semibold text-[var(--text)]">Team</h3>
-              <p className="mt-1 text-sm text-slate-500">For engineering orgs</p>
-              <p className="mt-6 font-display text-4xl font-bold text-[var(--text)]">
-                $149
-                <span className="ml-1 text-base font-normal text-slate-500">/mo</span>
-              </p>
-              <ul className="mt-6 space-y-3 text-sm text-slate-700">
-                {["Everything in Pro", "Unlimited team seats", "Custom gate policies", "Dedicated onboarding"].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[var(--purple)]" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button className="mt-8 w-full rounded-full border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50" variant="outline" asChild>
-                <a href="#waitlist">Join waitlist</a>
-              </Button>
-            </Reveal>
+            </div>
+          </div>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Button
+              className="rounded-full bg-[var(--grad-primary)] px-8 py-6 text-base text-white shadow-[0_12px_24px_rgba(139,92,246,0.3)] hover:opacity-90"
+              asChild
+            >
+              <a href="https://clawhub.com" target="_blank" rel="noreferrer">
+                Install on ClawHub
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-full border-[rgba(139,92,246,0.3)] px-8 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
+              asChild
+            >
+              <a href="https://github.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+                View on GitHub
+              </a>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Waitlist */}
-      <WaitlistSection />
-
-      <footer className="relative bg-[var(--grad-primary)] px-6 py-20 text-white">
+      {/* ═══════════ FOOTER ═══════════ */}
+      <footer className="relative border-t border-[rgba(139,92,246,0.1)] bg-[var(--bg)] px-6 py-16 text-[var(--text)]">
         <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
-          <div className="logo-tile mb-4 bg-white/20 text-white">
-            <Gamepad2 className="h-5 w-5" />
+          <div className="logo-tile mb-4">
+            <Code2 className="h-5 w-5" />
           </div>
-          <p className="font-display text-4xl font-semibold">Reckit Ralph</p>
-          <p className="mt-2 text-lg text-white/85">Stop shipping guesswork. Start shipping proof.</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <p className="font-display text-3xl font-semibold text-gradient">wreckit</p>
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
+            Bulletproof AI code verification.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Button
-              className="rounded-full bg-white text-[var(--purple)] hover:bg-white/90"
+              variant="outline"
+              className="rounded-full border-[rgba(139,92,246,0.3)] text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
               asChild
             >
-              <a
-                href="https://github.com/christiancattaneo/wreckit"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://github.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
                 GitHub
               </a>
             </Button>
             <Button
               variant="outline"
-              className="rounded-full border-white/60 text-white hover:border-white"
+              className="rounded-full border-[rgba(139,92,246,0.3)] text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
               asChild
             >
               <a href="https://clawhub.com" target="_blank" rel="noreferrer">
@@ -996,8 +834,8 @@ export default function MarketingPage() {
               </a>
             </Button>
           </div>
-          <p className="mt-10 text-xs uppercase tracking-[0.3em] text-white/75">
-            Reckit Ralph - Multi-gate AI verification and evidence engine
+          <p className="mt-10 text-xs text-[var(--text-muted)]">
+            wreckit by Christian Cattaneo
           </p>
         </div>
       </footer>

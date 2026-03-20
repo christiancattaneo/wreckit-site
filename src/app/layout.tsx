@@ -21,9 +21,22 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "Reckit Ralph — AI Code Verification",
+  title: "wreckit — Bulletproof AI Code Verification",
   description:
-    "Reckit Ralph is a full verification system for software quality. Ralph Loop is one gate inside a broader evidence pipeline.",
+    "14 verification gates. Mutation testing, SAST, dynamic analysis, and more. Ship proof, not vibes. An OpenClaw skill by Christian Cattaneo.",
+  metadataBase: new URL("https://wreckit-ralph.vercel.app"),
+  openGraph: {
+    title: "wreckit — Bulletproof AI Code Verification",
+    description: "14 verification gates. Ship proof, not vibes.",
+    url: "https://wreckit-ralph.vercel.app",
+    siteName: "wreckit",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "wreckit — Bulletproof AI Code Verification",
+    description: "14 verification gates. Ship proof, not vibes.",
+  },
 };
 
 export default function RootLayout({
@@ -34,21 +47,21 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Reckit Ralph",
-    "description": "AI code verification system. 11 parallel gates — slop scan, type check, mutation testing, security, and more. Ships a signed proof bundle with every verdict.",
+    "name": "wreckit",
+    "description": "Bulletproof AI code verification. 14 parallel gates — slop scan, type check, mutation testing, SAST, dynamic analysis, and more. Ships a signed proof bundle with every verdict.",
     "url": "https://wreckit-ralph.vercel.app",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Web, CLI",
-    "offers": [
-      { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
-      { "@type": "Offer", "name": "Pro", "price": "29", "priceCurrency": "USD", "billingIncrement": "month" },
-      { "@type": "Offer", "name": "Team", "price": "99", "priceCurrency": "USD", "billingIncrement": "month" }
-    ],
+    "operatingSystem": "macOS, Linux",
+    "offers": {
+      "@type": "Offer",
+      "name": "Open Source",
+      "price": "0",
+      "priceCurrency": "USD",
+    },
     "publisher": {
-      "@type": "Organization",
-      "name": "Reckit Ralph",
-      "url": "https://wreckit-ralph.vercel.app"
-    }
+      "@type": "Person",
+      "name": "Christian Cattaneo",
+    },
   };
 
   return (
