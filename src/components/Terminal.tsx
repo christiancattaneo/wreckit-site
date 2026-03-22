@@ -23,11 +23,11 @@ const lines = [
   "[13/14] Performance        PASS  (no regressions)",
   "[14/14] Proof Bundle       GENERATED",
   "",
-  "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-  "  Verdict: SHIP ✅",
+  "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+  "  Verdict: SHIP \u2705",
   "  14 gates passed. 0 warnings.",
   "  Proof: .wreckit/proof.json",
-  "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+  "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
 ];
 
 export default function Terminal() {
@@ -86,49 +86,49 @@ export default function Terminal() {
   }, [content]);
 
   return (
-    <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-[rgba(139,92,246,0.2)] bg-[#0a0a14] shadow-[0_16px_40px_rgba(0,0,0,0.4)]">
-      <div className="flex items-center gap-2 border-b border-[rgba(139,92,246,0.12)] bg-[#0d0d18] px-4 py-3">
+    <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-[rgba(124,58,237,0.12)] bg-[#1e1e2e] shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+      <div className="flex items-center gap-2 border-b border-[rgba(255,255,255,0.06)] bg-[#252536] px-4 py-3">
         <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
         <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
         <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-        <span className="ml-3 text-xs text-[#6a6a8a]">wreckit — verification pipeline</span>
+        <span className="ml-3 text-xs text-[#8888a8]">wreckit -- verification pipeline</span>
       </div>
       <div
         ref={containerRef}
-        className="h-[440px] overflow-y-auto bg-[#08080e] px-4 py-4 font-mono text-xs leading-relaxed text-[#a8a8c8]"
+        className="h-[440px] overflow-y-auto bg-[#1a1a2e] px-4 py-4 font-mono text-xs leading-relaxed text-[#b0b0cc]"
       >
         <pre className="whitespace-pre-wrap">
           {content.split("\n").map((line, index) => {
-            let lineClass = "text-[#a8a8c8]";
+            let lineClass = "text-[#b0b0cc]";
             if (line.startsWith("$")) {
-              lineClass = "text-[#8b5cf6]";
+              lineClass = "text-[#a78bfa]";
             }
             if (line.includes("PASS")) {
-              lineClass = "text-[#10b981]";
+              lineClass = "text-[#34d399]";
             }
             if (line.includes("WARN") || line.includes("CAUTION")) {
-              lineClass = "text-[#f59e0b]";
+              lineClass = "text-[#fbbf24]";
             }
             if (line.includes("BLOCKED")) {
-              lineClass = "text-[#ef4444]";
+              lineClass = "text-[#f87171]";
             }
             if (line.includes("SHIP")) {
-              lineClass = "text-[#10b981] font-semibold";
+              lineClass = "text-[#34d399] font-semibold";
             }
             if (line.includes("Verdict")) {
               lineClass = "text-[#e8e8f0] font-semibold";
             }
-            if (line.includes("━━━━━━━━")) {
-              lineClass = "text-[#333355]";
+            if (line.includes("\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501")) {
+              lineClass = "text-[#3a3a55]";
             }
             if (line.includes("Proof:")) {
-              lineClass = "text-[#6a6a8a]";
+              lineClass = "text-[#8888a8]";
             }
             if (line.includes("Detecting") || line.includes("Running")) {
-              lineClass = "text-[#6a6a8a]";
+              lineClass = "text-[#8888a8]";
             }
             if (line.includes("GENERATED")) {
-              lineClass = "text-[#06b6d4]";
+              lineClass = "text-[#67e8f9]";
             }
             return (
               <span key={`${line}-${index}`} className={lineClass}>
@@ -138,7 +138,7 @@ export default function Terminal() {
             );
           })}
           <span
-            className="inline-block h-4 w-2 translate-y-1 bg-[#8b5cf6]"
+            className="inline-block h-4 w-2 translate-y-1 bg-[#a78bfa]"
             style={{ animation: "cursorBlink 1s infinite" }}
           />
         </pre>

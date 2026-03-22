@@ -51,7 +51,7 @@ const steps = [
   },
   {
     title: "Get your verdict",
-    copy: "Ship ✅, Caution ⚠️, or Blocked 🚫 — plus a signed proof bundle in .wreckit/",
+    copy: "Ship \u2705, Caution \u26a0\ufe0f, or Blocked \ud83d\udeab — plus a signed proof bundle in .wreckit/",
   },
 ];
 
@@ -76,7 +76,7 @@ const modes = [
   {
     name: "BUILD",
     chip: "B",
-    emoji: "🟢",
+    emoji: "\ud83d\udfe2",
     color: "linear-gradient(90deg, #10b981, #22c55e)",
     trigger: "New project from PRD",
     desc: "Full pipeline for greenfield projects with verification guardrails from day one.",
@@ -84,7 +84,7 @@ const modes = [
   {
     name: "REBUILD",
     chip: "R",
-    emoji: "🟡",
+    emoji: "\ud83d\udfe1",
     color: "linear-gradient(90deg, #f59e0b, #fbbf24)",
     trigger: "Existing code + migration spec",
     desc: "BUILD + behavior capture + regression replay for safe migrations.",
@@ -92,7 +92,7 @@ const modes = [
   {
     name: "FIX",
     chip: "F",
-    emoji: "🔴",
+    emoji: "\ud83d\udd34",
     color: "linear-gradient(90deg, #ef4444, #f43f5e)",
     trigger: "Bug fix with proof",
     desc: "Fix, verify, prove nothing else broke. Signed evidence of safety.",
@@ -100,7 +100,7 @@ const modes = [
   {
     name: "AUDIT",
     chip: "A",
-    emoji: "🔵",
+    emoji: "\ud83d\udfe6",
     color: "linear-gradient(90deg, #06b6d4, #3b82f6)",
     trigger: "Verify existing code, no changes",
     desc: "Read-only analysis. Full gate suite. No modifications to your codebase.",
@@ -110,23 +110,23 @@ const modes = [
 const verdicts = [
   {
     name: "SHIP",
-    symbol: "✅",
-    color: "#064e3b",
-    glow: "rgba(16, 185, 129, 0.35)",
+    symbol: "\u2705",
+    bg: "linear-gradient(135deg, #059669, #10b981)",
+    glow: "rgba(16, 185, 129, 0.25)",
     desc: "All gates passed. Evidence thresholds satisfied. Safe to deploy.",
   },
   {
     name: "CAUTION",
-    symbol: "⚠️",
-    color: "#78350f",
-    glow: "rgba(245, 158, 11, 0.3)",
+    symbol: "\u26a0\ufe0f",
+    bg: "linear-gradient(135deg, #d97706, #f59e0b)",
+    glow: "rgba(245, 158, 11, 0.2)",
     desc: "Some gates flagged risk. Review the proof bundle before promoting.",
   },
   {
     name: "BLOCKED",
-    symbol: "🚫",
-    color: "#7f1d1d",
-    glow: "rgba(239, 68, 68, 0.3)",
+    symbol: "\ud83d\udeab",
+    bg: "linear-gradient(135deg, #dc2626, #ef4444)",
+    glow: "rgba(239, 68, 68, 0.2)",
     desc: "Critical issues detected. Release should not proceed.",
   },
 ];
@@ -137,7 +137,7 @@ const chatTranscript = [
     name: "You",
     role: "Developer",
     text: "Use wreckit to audit ~/Projects/checkout. Don't change anything.",
-    meta: 'Mode: AUDIT — read-only verification',
+    meta: 'Mode: AUDIT \u2014 read-only verification',
   },
   {
     side: "right",
@@ -150,21 +150,21 @@ const chatTranscript = [
     side: "right",
     name: "wreckit",
     role: "Verification Engine",
-    text: "Mutation gate found one weak assertion cluster in checkout/payment.ts. Kill rate 71% — below 80% threshold.",
-    meta: "Gate: Mutation Kill — CAUTION",
+    text: "Mutation gate found one weak assertion cluster in checkout/payment.ts. Kill rate 71% \u2014 below 80% threshold.",
+    meta: "Gate: Mutation Kill \u2014 CAUTION",
   },
   {
     side: "right",
     name: "wreckit",
     role: "Verification Engine",
-    text: "Final verdict: CAUTION ⚠️. 13 gates passed, 1 below threshold. Proof bundle written to .wreckit/proof.json",
+    text: "Final verdict: CAUTION \u26a0\ufe0f. 13 gates passed, 1 below threshold. Proof bundle written to .wreckit/proof.json",
     meta: "Artifact: .wreckit/proof.json",
   },
 ];
 
 const scripts = [
   { name: "run-all-gates.sh", args: "[path] [mode]", desc: "Full sequential pipeline with telemetry" },
-  { name: "slop-scan.sh", args: "[path]", desc: "Semantic slop detection — placeholders, stubs, dead code" },
+  { name: "slop-scan.sh", args: "[path]", desc: "Semantic slop detection \u2014 placeholders, stubs, dead code" },
   { name: "type-check.sh", args: "[path]", desc: "tsc / mypy / cargo check / go vet" },
   { name: "red-team.sh", args: "[path]", desc: "20+ SAST vulnerability patterns + ReDoS" },
   { name: "mutation-test.sh", args: "[path]", desc: "mutmut / Stryker / cargo-mutants / AI fallback" },
@@ -225,13 +225,13 @@ function highlightJson(json: string) {
     .replace(/>/g, "&gt;");
 
   return escaped
-    .replace(/"([^"]+)":/g, '<span class="text-[#8b5cf6]">"$1"</span>:')
-    .replace(/: "([^"]*)"/g, ': <span class="text-[#06b6d4]">"$1"</span>')
-    .replace(/: (\d+(\.\d+)?)/g, ': <span class="text-[#f59e0b]">$1</span>')
-    .replace(/(PASS|GENERATED|SHIP)/g, '<span class="text-[#10b981]">$1</span>')
-    .replace(/: (true|false)/g, ': <span class="text-[#06b6d4]">$1</span>')
-    .replace(/CAUTION/g, '<span class="text-[#f59e0b]">CAUTION</span>')
-    .replace(/BLOCKED/g, '<span class="text-[#ef4444]">BLOCKED</span>');
+    .replace(/"([^"]+)":/g, '<span class="text-[#7c3aed]">"$1"</span>:')
+    .replace(/: "([^"]*)"/g, ': <span class="text-[#0891b2]">"$1"</span>')
+    .replace(/: (\d+(\.\d+)?)/g, ': <span class="text-[#d97706]">$1</span>')
+    .replace(/(PASS|GENERATED|SHIP)/g, '<span class="text-[#059669]">$1</span>')
+    .replace(/: (true|false)/g, ': <span class="text-[#0891b2]">$1</span>')
+    .replace(/CAUTION/g, '<span class="text-[#d97706]">CAUTION</span>')
+    .replace(/BLOCKED/g, '<span class="text-[#dc2626]">BLOCKED</span>');
 }
 
 function useScrollTop() {
@@ -278,7 +278,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
   return (
     <div className="mx-auto mb-10 max-w-3xl text-center">
       {subtitle ? (
-        <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)]">{subtitle}</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)] font-semibold">{subtitle}</p>
       ) : null}
       <h2 className="mt-3 font-display text-3xl font-semibold text-[var(--text)] sm:text-4xl">
         {title}
@@ -335,14 +335,11 @@ export default function MarketingPage() {
 
   return (
     <div className="relative overflow-hidden bg-[var(--bg)] text-[var(--text)]">
-      <div className="aurora-field" aria-hidden="true" />
-      <div className="scanline-overlay pointer-events-none" aria-hidden="true" />
-
       {/* ═══════════ NAV ═══════════ */}
       <nav
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all",
-          scrolled ? "glassline border-b border-[rgba(139,92,246,0.15)]" : ""
+          scrolled ? "glassline border-b border-[rgba(124,58,237,0.08)]" : ""
         )}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -370,7 +367,7 @@ export default function MarketingPage() {
             ))}
           </div>
           <Button
-            className="rounded-full bg-[var(--grad-primary)] text-white shadow-[0_8px_20px_rgba(139,92,246,0.3)] hover:opacity-90"
+            className="rounded-full bg-[var(--grad-primary)] text-white shadow-[0_4px_14px_rgba(124,58,237,0.2)] hover:opacity-90"
             asChild
           >
             <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
@@ -383,25 +380,19 @@ export default function MarketingPage() {
       {/* ═══════════ HERO ═══════════ */}
       <section className="relative min-h-screen overflow-hidden px-6 pb-24 pt-28">
         <div className="absolute inset-0 mesh-bg" />
-        <div className="absolute inset-0 opacity-80" aria-hidden="true">
+        <div className="absolute inset-0" aria-hidden="true">
           <div
-            className="blob left-[-10%] top-[-20%] h-[440px] w-[440px] bg-[radial-gradient(circle,_rgba(99,102,241,0.3),_transparent_70%)]"
+            className="blob left-[-10%] top-[-20%] h-[440px] w-[440px] bg-[radial-gradient(circle,_rgba(124,58,237,0.12),_transparent_70%)]"
             style={{ animation: "morph 16s ease-in-out infinite" }}
           />
           <div
-            className="blob right-[-12%] top-[8%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(6,182,212,0.2),_transparent_70%)]"
+            className="blob right-[-12%] top-[8%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(8,145,178,0.08),_transparent_70%)]"
             style={{ animation: "morph 18s ease-in-out infinite" }}
           />
           <div
-            className="blob bottom-[-20%] left-[20%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(236,72,153,0.2),_transparent_70%)]"
+            className="blob bottom-[-20%] left-[20%] h-[520px] w-[520px] bg-[radial-gradient(circle,_rgba(236,72,153,0.06),_transparent_70%)]"
             style={{ animation: "morph 20s ease-in-out infinite" }}
           />
-        </div>
-
-        <div className="absolute left-[55%] top-[40%] hidden h-60 w-60 -translate-x-1/2 -translate-y-1/2 lg:block">
-          <span className="impact-ring inset-0" />
-          <span className="impact-ring delay-1 inset-0" />
-          <span className="impact-ring delay-2 inset-0" />
         </div>
 
         <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-12 lg:grid-cols-[1.1fr_0.9fr]">
@@ -412,7 +403,7 @@ export default function MarketingPage() {
             transition={{ duration: 0.8 }}
           >
             <h1 className="font-display text-6xl font-extrabold leading-[0.95] sm:text-7xl lg:text-8xl">
-              <span className="text-gradient-strong shimmer block glitch-text">wreckit</span>
+              <span className="text-gradient-strong shimmer block">wreckit</span>
             </h1>
             <p className="mt-4 font-display text-2xl font-semibold text-[var(--text)] sm:text-3xl">
               Bulletproof AI code verification.
@@ -424,15 +415,15 @@ export default function MarketingPage() {
             </p>
 
             {/* Install command */}
-            <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-[rgba(139,92,246,0.2)] bg-[rgba(13,13,22,0.8)] px-5 py-3 font-mono text-sm">
-              <span className="text-[var(--text-muted)]">$</span>
-              <span className="text-[var(--purple)]">clawhub install</span>
-              <span className="text-[var(--text)]">wreckit</span>
+            <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-[rgba(124,58,237,0.12)] bg-[#1e1e2e] px-5 py-3 font-mono text-sm text-[#c8c8e0]">
+              <span className="text-[#8888a8]">$</span>
+              <span className="text-[#a78bfa]">clawhub install</span>
+              <span className="text-[#e8e8f0]">wreckit</span>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
               <Button
-                className="rounded-full bg-[var(--grad-primary)] px-6 py-6 text-base text-white shadow-[0_12px_24px_rgba(139,92,246,0.3)] hover:opacity-90"
+                className="rounded-full bg-[var(--grad-primary)] px-6 py-6 text-base text-white shadow-[0_8px_20px_rgba(124,58,237,0.2)] hover:opacity-90"
                 asChild
               >
                 <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
@@ -442,7 +433,7 @@ export default function MarketingPage() {
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full border-[rgba(139,92,246,0.3)] px-6 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
+                className="rounded-full border-[rgba(124,58,237,0.2)] px-6 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(124,58,237,0.35)] hover:bg-[rgba(124,58,237,0.04)] hover:text-[var(--text)]"
                 asChild
               >
                 <a
@@ -485,7 +476,7 @@ export default function MarketingPage() {
 
       {/* ═══════════ HOW IT WORKS ═══════════ */}
       <section className="relative px-6 py-24" id="how">
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        <div className="absolute inset-0 grid-bg opacity-40" />
         <div className="relative">
           <SectionHeader title="Three steps to verified code" subtitle="How it works" />
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3">
@@ -515,11 +506,11 @@ export default function MarketingPage() {
               className="card card-hover group relative overflow-hidden p-6"
             >
               <div
-                className="absolute inset-0 opacity-0 transition group-hover:opacity-[0.06]"
+                className="absolute inset-0 opacity-0 transition group-hover:opacity-[0.04]"
                 style={{ background: mode.color }}
               />
               <div className="relative">
-                <div className="mb-4 h-1 w-full rounded-full opacity-60" style={{ background: mode.color }} />
+                <div className="mb-4 h-1 w-full rounded-full opacity-50" style={{ background: mode.color }} />
                 <div className="flex items-center gap-3">
                   <div className="mode-chip" style={{ background: mode.color }}>
                     {mode.chip}
@@ -539,18 +530,18 @@ export default function MarketingPage() {
 
       {/* ═══════════ GATES ═══════════ */}
       <section className="relative px-6 py-24" id="gates">
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        <div className="absolute inset-0 grid-bg opacity-40" />
         <div className="relative">
           <div className="mx-auto mb-12 max-w-4xl text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)]">Verification</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)] font-semibold">Verification</p>
             <h2 className="mt-3 text-3xl font-semibold text-[var(--text)] sm:text-4xl">
               14 gates. Each one earns trust.
             </h2>
             <div className="mt-4 flex items-center justify-center gap-4 text-sm text-[var(--text-muted)]">
-              <span className="rounded-full border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.08)] px-4 py-2 font-semibold text-[var(--purple)]">
+              <span className="rounded-full border border-[rgba(124,58,237,0.15)] bg-[rgba(124,58,237,0.06)] px-4 py-2 font-semibold text-[var(--purple)]">
                 {gateCount} gates
               </span>
-              <span className="rounded-full border border-[rgba(6,182,212,0.3)] bg-[rgba(6,182,212,0.08)] px-4 py-2 font-semibold text-[var(--cyan)]">
+              <span className="rounded-full border border-[rgba(8,145,178,0.15)] bg-[rgba(8,145,178,0.06)] px-4 py-2 font-semibold text-[var(--cyan)]">
                 + proof bundle
               </span>
             </div>
@@ -569,7 +560,7 @@ export default function MarketingPage() {
                 className="card card-hover group relative overflow-hidden p-5"
               >
                 <div
-                  className="absolute inset-0 opacity-0 transition group-hover:opacity-[0.06]"
+                  className="absolute inset-0 opacity-0 transition group-hover:opacity-[0.04]"
                   style={{ background: gateGradients[index % gateGradients.length] }}
                 />
                 <div className="relative flex items-center justify-between">
@@ -595,7 +586,7 @@ export default function MarketingPage() {
         <div className="mx-auto max-w-3xl space-y-4">
           {usageCommands.map((item, index) => (
             <Reveal key={item.cmd} delay={index * 0.08}>
-              <div className="flex items-start gap-4 rounded-xl border border-[rgba(139,92,246,0.12)] bg-[var(--bg-card)] p-5">
+              <div className="flex items-start gap-4 rounded-xl border border-[rgba(124,58,237,0.08)] bg-[var(--bg-card)] p-5 backdrop-blur">
                 <div
                   className="mt-0.5 flex h-7 w-14 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
                   style={{
@@ -633,7 +624,7 @@ export default function MarketingPage() {
           title="Verification as conversation"
           subtitle="Chat Flow"
         />
-        <div className="mx-auto max-w-4xl rounded-[28px] border border-[rgba(139,92,246,0.15)] bg-[rgba(10,10,18,0.6)] p-6 shadow-[0_24px_60px_rgba(0,0,0,0.3)] backdrop-blur md:p-10">
+        <div className="mx-auto max-w-4xl rounded-[28px] border border-[rgba(124,58,237,0.1)] bg-[rgba(255,255,255,0.6)] p-6 shadow-[0_12px_40px_rgba(0,0,0,0.06)] backdrop-blur-xl md:p-10">
           <div className="space-y-4">
             {chatTranscript.map((message, index) => {
               const isRight = message.side === "right";
@@ -688,7 +679,7 @@ export default function MarketingPage() {
         <div className="mx-auto grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2">
           {scripts.map((script, index) => (
             <Reveal key={script.name} delay={index * 0.06}>
-              <div className="rounded-xl border border-[rgba(139,92,246,0.1)] bg-[var(--bg-card)] p-4">
+              <div className="rounded-xl border border-[rgba(124,58,237,0.08)] bg-[var(--bg-card)] p-4 backdrop-blur">
                 <div className="font-mono text-sm">
                   <span className="text-[var(--purple)]">{script.name}</span>
                   <span className="ml-2 text-[var(--text-muted)]">{script.args}</span>
@@ -707,23 +698,23 @@ export default function MarketingPage() {
           <Reveal className="space-y-5">
             <h3 className="text-2xl font-semibold text-[var(--text)]">Machine-verifiable evidence</h3>
             <p className="text-sm text-[var(--text-muted)]">
-              wreckit writes a tamper-evident proof bundle in <code className="rounded bg-[rgba(139,92,246,0.12)] px-1.5 py-0.5 text-[var(--purple)]">.wreckit/</code> with
+              wreckit writes a tamper-evident proof bundle in <code className="rounded bg-[rgba(124,58,237,0.08)] px-1.5 py-0.5 text-[var(--purple)]">.wreckit/</code> with
               gate output, thresholds, and final verdict reasoning. Review exactly why a
               release was approved — or blocked.
             </p>
             <div className="space-y-2 font-mono text-sm text-[var(--text-muted)]">
               <p className="text-[var(--text)]">.wreckit/</p>
-              <p className="pl-4">├── proof.json <span className="text-[var(--text-muted)]">← machine-readable verdict</span></p>
-              <p className="pl-4">├── dashboard.json <span className="text-[var(--text-muted)]">← external tooling schema</span></p>
-              <p className="pl-4">├── decision.md <span className="text-[var(--text-muted)]">← human-readable reasoning</span></p>
-              <p className="pl-4">└── raw/ <span className="text-[var(--text-muted)]">← raw script output per gate</span></p>
+              <p className="pl-4">\u251c\u2500\u2500 proof.json <span className="text-[var(--text-muted)]">\u2190 machine-readable verdict</span></p>
+              <p className="pl-4">\u251c\u2500\u2500 dashboard.json <span className="text-[var(--text-muted)]">\u2190 external tooling schema</span></p>
+              <p className="pl-4">\u251c\u2500\u2500 decision.md <span className="text-[var(--text-muted)]">\u2190 human-readable reasoning</span></p>
+              <p className="pl-4">\u2514\u2500\u2500 raw/ <span className="text-[var(--text-muted)]">\u2190 raw script output per gate</span></p>
             </div>
           </Reveal>
           <Reveal className="receipt p-6 font-mono text-xs text-[var(--text-muted)]">
             <div className="stamp">VERIFIED</div>
             <div className="mb-4 flex items-center justify-between">
               <div className="text-xs text-[var(--text-muted)]">.wreckit/proof.json</div>
-              <Badge className="bg-[#10b981] text-white shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+              <Badge className="bg-[#059669] text-white shadow-[0_2px_8px_rgba(5,150,105,0.2)]">
                 SHIP
               </Badge>
             </div>
@@ -745,15 +736,15 @@ export default function MarketingPage() {
                 className="rounded-2xl p-6 text-center text-white animate-[pulseVerdict_3.4s_ease-in-out_infinite]"
                 style={
                   {
-                    background: verdict.color,
-                    boxShadow: `0 0 24px ${verdict.glow}`,
+                    background: verdict.bg,
+                    boxShadow: `0 8px 24px ${verdict.glow}`,
                     "--glow": verdict.glow,
                   } as CSSProperties
                 }
               >
                 <div className="text-3xl">{verdict.symbol}</div>
                 <h3 className="mt-2 text-xl font-semibold tracking-wide">{verdict.name}</h3>
-                <p className="mt-2 text-sm text-white/75">{verdict.desc}</p>
+                <p className="mt-2 text-sm text-white/80">{verdict.desc}</p>
               </div>
             </Reveal>
           ))}
@@ -763,27 +754,27 @@ export default function MarketingPage() {
       {/* ═══════════ INSTALL ═══════════ */}
       <section className="relative px-6 py-24" id="install">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)]">Get started</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--purple)] font-semibold">Get started</p>
           <h2 className="mt-3 font-display text-3xl font-semibold text-[var(--text)] sm:text-4xl">
             Install in one command
           </h2>
           <div className="mx-auto mt-8 max-w-md">
             <div className="code-block p-5 text-left">
-              <p className="text-[var(--text-muted)]"># Via ClawHub (recommended)</p>
+              <p className="text-[#8888a8]"># Via ClawHub (recommended)</p>
               <p className="mt-1">
-                <span className="text-[var(--text-muted)]">$ </span>
-                <span className="text-[var(--purple)]">clawhub install</span>{" "}
-                <span className="text-[var(--text)]">wreckit</span>
+                <span className="text-[#8888a8]">$ </span>
+                <span className="text-[#a78bfa]">clawhub install</span>{" "}
+                <span className="text-[#e8e8f0]">wreckit</span>
               </p>
-              <p className="mt-4 text-[var(--text-muted)]"># Then use it:</p>
-              <p className="mt-1 text-[var(--cyan)]">
+              <p className="mt-4 text-[#8888a8]"># Then use it:</p>
+              <p className="mt-1 text-[#67e8f9]">
                 &quot;Use wreckit to audit ~/Projects/myapp&quot;
               </p>
             </div>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button
-              className="rounded-full bg-[var(--grad-primary)] px-8 py-6 text-base text-white shadow-[0_12px_24px_rgba(139,92,246,0.3)] hover:opacity-90"
+              className="rounded-full bg-[var(--grad-primary)] px-8 py-6 text-base text-white shadow-[0_8px_20px_rgba(124,58,237,0.2)] hover:opacity-90"
               asChild
             >
               <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
@@ -793,7 +784,7 @@ export default function MarketingPage() {
             </Button>
             <Button
               variant="outline"
-              className="rounded-full border-[rgba(139,92,246,0.3)] px-8 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
+              className="rounded-full border-[rgba(124,58,237,0.2)] px-8 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(124,58,237,0.35)] hover:bg-[rgba(124,58,237,0.04)] hover:text-[var(--text)]"
               asChild
             >
               <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
@@ -805,7 +796,7 @@ export default function MarketingPage() {
       </section>
 
       {/* ═══════════ FOOTER ═══════════ */}
-      <footer className="relative border-t border-[rgba(139,92,246,0.1)] bg-[var(--bg)] px-6 py-16 text-[var(--text)]">
+      <footer className="relative border-t border-[rgba(124,58,237,0.08)] bg-white px-6 py-16 text-[var(--text)]">
         <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
           <div className="logo-tile mb-4">
             <Code2 className="h-5 w-5" />
@@ -817,7 +808,7 @@ export default function MarketingPage() {
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Button
               variant="outline"
-              className="rounded-full border-[rgba(139,92,246,0.3)] text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
+              className="rounded-full border-[rgba(124,58,237,0.15)] text-[var(--text-muted)] hover:border-[rgba(124,58,237,0.3)] hover:bg-[rgba(124,58,237,0.04)] hover:text-[var(--text)]"
               asChild
             >
               <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
@@ -826,7 +817,7 @@ export default function MarketingPage() {
             </Button>
             <Button
               variant="outline"
-              className="rounded-full border-[rgba(139,92,246,0.3)] text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
+              className="rounded-full border-[rgba(124,58,237,0.15)] text-[var(--text-muted)] hover:border-[rgba(124,58,237,0.3)] hover:bg-[rgba(124,58,237,0.04)] hover:text-[var(--text)]"
               asChild
             >
               <a href="https://openclaw.ai" target="_blank" rel="noreferrer">
