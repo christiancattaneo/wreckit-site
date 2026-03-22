@@ -431,7 +431,7 @@ export default function ProofDrivenDevelopmentPage() {
               Wreckit runs the Three Minds pattern and ships a signed proof bundle with every verdict.
             </p>
             <a
-              href="https://clawhub.com/christiancattaneo/wreckit"
+              href="https://clawhub.com/christiancattaneo/wreckit-ralph"
               target="_blank"
               rel="noreferrer"
               className="inline-block rounded-full px-8 py-3 text-white font-semibold shadow-[0_12px_24px_rgba(99,102,241,0.3)] hover:opacity-90 transition"
@@ -446,7 +446,7 @@ export default function ProofDrivenDevelopmentPage() {
           <p className="text-sm text-slate-400 italic">
             Published by the wreckit team.{" "}
             <a
-              href="https://clawhub.com/christiancattaneo/wreckit"
+              href="https://clawhub.com/christiancattaneo/wreckit-ralph"
               target="_blank"
               rel="noreferrer"
               className="text-[var(--purple)] hover:underline"

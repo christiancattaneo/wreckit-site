@@ -370,7 +370,7 @@ export default function MarketingPage() {
             className="rounded-full bg-[var(--grad-primary)] text-white shadow-[0_4px_14px_rgba(124,58,237,0.2)] hover:opacity-90"
             asChild
           >
-            <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+            <a href="https://clawhub.com/christiancattaneo/wreckit-ralph" target="_blank" rel="noreferrer">
               Install on ClawHub
             </a>
           </Button>
@@ -418,7 +418,7 @@ export default function MarketingPage() {
             <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-[rgba(124,58,237,0.12)] bg-[#1e1e2e] px-5 py-3 font-mono text-sm text-[#c8c8e0]">
               <span className="text-[#8888a8]">$</span>
               <span className="text-[#a78bfa]">clawhub install</span>
-              <span className="text-[#e8e8f0]">wreckit</span>
+              <span className="text-[#e8e8f0]">wreckit-ralph</span>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -426,7 +426,7 @@ export default function MarketingPage() {
                 className="rounded-full bg-[var(--grad-primary)] px-6 py-6 text-base text-white shadow-[0_8px_20px_rgba(124,58,237,0.2)] hover:opacity-90"
                 asChild
               >
-                <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+                <a href="https://clawhub.com/christiancattaneo/wreckit-ralph" target="_blank" rel="noreferrer">
                   Install on ClawHub
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
@@ -437,7 +437,7 @@ export default function MarketingPage() {
                 asChild
               >
                 <a
-                  href="https://clawhub.com/christiancattaneo/wreckit"
+                  href="https://clawhub.com/christiancattaneo/wreckit-ralph"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -764,7 +764,7 @@ export default function MarketingPage() {
               <p className="mt-1">
                 <span className="text-[#8888a8]">$ </span>
                 <span className="text-[#a78bfa]">clawhub install</span>{" "}
-                <span className="text-[#e8e8f0]">wreckit</span>
+                <span className="text-[#e8e8f0]">wreckit-ralph</span>
               </p>
               <p className="mt-4 text-[#8888a8]"># Then use it:</p>
               <p className="mt-1 text-[#67e8f9]">
@@ -777,7 +777,7 @@ export default function MarketingPage() {
               className="rounded-full bg-[var(--grad-primary)] px-8 py-6 text-base text-white shadow-[0_8px_20px_rgba(124,58,237,0.2)] hover:opacity-90"
               asChild
             >
-              <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+              <a href="https://clawhub.com/christiancattaneo/wreckit-ralph" target="_blank" rel="noreferrer">
                 Install on ClawHub
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
@@ -787,7 +787,7 @@ export default function MarketingPage() {
               className="rounded-full border-[rgba(124,58,237,0.2)] px-8 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(124,58,237,0.35)] hover:bg-[rgba(124,58,237,0.04)] hover:text-[var(--text)]"
               asChild
             >
-              <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+              <a href="https://clawhub.com/christiancattaneo/wreckit-ralph" target="_blank" rel="noreferrer">
                 View on ClawHub
               </a>
             </Button>
@@ -811,7 +811,7 @@ export default function MarketingPage() {
               className="rounded-full border-[rgba(124,58,237,0.15)] text-[var(--text-muted)] hover:border-[rgba(124,58,237,0.3)] hover:bg-[rgba(124,58,237,0.04)] hover:text-[var(--text)]"
               asChild
             >
-              <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+              <a href="https://clawhub.com/christiancattaneo/wreckit-ralph" target="_blank" rel="noreferrer">
                 ClawHub
               </a>
             </Button>
