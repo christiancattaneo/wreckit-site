@@ -373,7 +373,7 @@ export default function MarketingPage() {
             className="rounded-full bg-[var(--grad-primary)] text-white shadow-[0_8px_20px_rgba(139,92,246,0.3)] hover:opacity-90"
             asChild
           >
-            <a href="https://clawhub.com" target="_blank" rel="noreferrer">
+            <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
               Install on ClawHub
             </a>
           </Button>
@@ -435,7 +435,7 @@ export default function MarketingPage() {
                 className="rounded-full bg-[var(--grad-primary)] px-6 py-6 text-base text-white shadow-[0_12px_24px_rgba(139,92,246,0.3)] hover:opacity-90"
                 asChild
               >
-                <a href="https://clawhub.com" target="_blank" rel="noreferrer">
+                <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
                   Install on ClawHub
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
@@ -446,11 +446,11 @@ export default function MarketingPage() {
                 asChild
               >
                 <a
-                  href="https://github.com/christiancattaneo/wreckit"
+                  href="https://clawhub.com/christiancattaneo/wreckit"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  View on GitHub
+                  View on ClawHub
                 </a>
               </Button>
             </div>
@@ -613,7 +613,7 @@ export default function MarketingPage() {
               <p className="text-sm text-[var(--text-muted)]">
                 wreckit is an{" "}
                 <a
-                  href="https://clawhub.com"
+                  href="https://openclaw.ai"
                   target="_blank"
                   rel="noreferrer"
                   className="text-[var(--purple)] underline decoration-[var(--purple)]/30 hover:decoration-[var(--purple)]"
@@ -786,7 +786,7 @@ export default function MarketingPage() {
               className="rounded-full bg-[var(--grad-primary)] px-8 py-6 text-base text-white shadow-[0_12px_24px_rgba(139,92,246,0.3)] hover:opacity-90"
               asChild
             >
-              <a href="https://clawhub.com" target="_blank" rel="noreferrer">
+              <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
                 Install on ClawHub
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
@@ -796,8 +796,8 @@ export default function MarketingPage() {
               className="rounded-full border-[rgba(139,92,246,0.3)] px-8 py-6 text-base text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
               asChild
             >
-              <a href="https://github.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
-                View on GitHub
+              <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+                View on ClawHub
               </a>
             </Button>
           </div>
@@ -820,8 +820,8 @@ export default function MarketingPage() {
               className="rounded-full border-[rgba(139,92,246,0.3)] text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
               asChild
             >
-              <a href="https://github.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
-                GitHub
+              <a href="https://clawhub.com/christiancattaneo/wreckit" target="_blank" rel="noreferrer">
+                ClawHub
               </a>
             </Button>
             <Button
@@ -829,8 +829,8 @@ export default function MarketingPage() {
               className="rounded-full border-[rgba(139,92,246,0.3)] text-[var(--text-muted)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.08)] hover:text-[var(--text)]"
               asChild
             >
-              <a href="https://clawhub.com" target="_blank" rel="noreferrer">
-                ClawHub
+              <a href="https://openclaw.ai" target="_blank" rel="noreferrer">
+                OpenClaw
               </a>
             </Button>
           </div>
