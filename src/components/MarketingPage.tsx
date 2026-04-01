@@ -36,6 +36,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Terminal from "@/components/Terminal";
+import PricingSection from "@/components/PricingSection";
 import { cn } from "@/lib/utils";
 
 /* ────────────────────────────── DATA ────────────────────────────── */
@@ -356,6 +357,7 @@ export default function MarketingPage() {
               { label: "Usage", href: "#usage" },
               { label: "Scripts", href: "#scripts" },
               { label: "Proof", href: "#proof" },
+              { label: "Pricing", href: "#pricing" },
             ].map((item) => (
               <a
                 key={item.href}
@@ -750,6 +752,9 @@ export default function MarketingPage() {
           ))}
         </div>
       </section>
+
+      {/* ═══════════ PRICING ═══════════ */}
+      <PricingSection />
 
       {/* ═══════════ INSTALL ═══════════ */}
       <section className="relative px-6 py-24" id="install">
